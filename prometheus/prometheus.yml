@@ -1,0 +1,13 @@
+global:
+  scrape_interval: 5s
+  evaluation_interval: 5s
+
+scrape_configs:
+  - job_name: 'spring-services'
+    metrics_path: '/actuator/prometheus'
+    static_configs:
+      - targets:
+          - 'gatewayservice:8080'
+          - 'ordercreationservice:8081'
+          - 'menuservice:8082'
+          - 'orderservice:8083'
