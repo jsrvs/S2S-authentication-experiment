@@ -1,9 +1,18 @@
 services:
+  certgen:
+    image: alpine/openssl
+    profiles: ["init"]
+    volumes:
+      - ./certs:/certs
+    entrypoint: ["sh", "/certs/generate-certs.sh"]
+
   menuservice:
     build: ./menuservice
     container_name: menuservice
     ports:
       - "8082:8082"
+    volumes:
+      - ./certs/out:/certs:ro
     networks:
       - s2s-net
 
@@ -12,6 +21,8 @@ services:
     container_name: orderservice
     ports:
       - "8083:8083"
+    volumes:
+      - ./certs/out:/certs:ro
     networks:
       - s2s-net
 
@@ -21,8 +32,10 @@ services:
     ports:
       - "8081:8081"
     environment:
-      MENU_URL: http://menuservice:8082
-      ORDER_URL: http://orderservice:8083
+      MENU_URL: https://menuservice:8082
+      ORDER_URL: https://orderservice:8083
+    volumes:
+      - ./certs/out:/certs:ro
     depends_on:
       - menuservice
       - orderservice
@@ -35,7 +48,9 @@ services:
     ports:
       - "8080:8080"
     environment:
-      ORDERCREATION_URL: http://ordercreationservice:8081
+      ORDERCREATION_URL: https://ordercreationservice:8081
+    volumes:
+      - ./certs/out:/certs:ro
     depends_on:
       - ordercreationservice
     networks:

@@ -8,6 +8,6 @@ scrape_configs:
     static_configs:
       - targets:
           - 'gatewayservice:8080'
-          - 'ordercreationservice:8081'
-          - 'menuservice:8082'
-          - 'orderservice:8083'
+          - 'ordercreationservice:18081'
+          - 'menuservice:18082'
+          - 'orderservice:18083'
