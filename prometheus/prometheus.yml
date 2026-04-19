@@ -11,3 +11,4 @@ scrape_configs:
           - 'ordercreationservice:8081'
           - 'menuservice:8082'
           - 'orderservice:8083'
+          - 'authserver:9000'

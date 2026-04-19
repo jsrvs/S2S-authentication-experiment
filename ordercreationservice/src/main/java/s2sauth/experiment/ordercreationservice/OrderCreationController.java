@@ -1,6 +1,6 @@
 package s2sauth.experiment.ordercreationservice;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,10 +17,10 @@ public class OrderCreationController {
     private final RestClient orderClient;
 
     public OrderCreationController(
-            @Value("${downstream.menu.url}") String menuUrl,
-            @Value("${downstream.order.url}") String orderUrl) {
-        this.menuClient = RestClient.create(menuUrl);
-        this.orderClient = RestClient.create(orderUrl);
+            @Qualifier("menuClient") RestClient menuClient,
+            @Qualifier("orderClient") RestClient orderClient) {
+        this.menuClient = menuClient;
+        this.orderClient = orderClient;
     }
 
     @PostMapping

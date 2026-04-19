@@ -1,9 +1,21 @@
 services:
+  authserver:
+    build: ./authserver
+    container_name: authserver
+    ports:
+      - "9000:9000"
+    networks:
+      - s2s-net
+
   menuservice:
     build: ./menuservice
     container_name: menuservice
     ports:
       - "8082:8082"
+    environment:
+      JWK_SET_URI: http://authserver:9000/oauth2/jwks
+    depends_on:
+      - authserver
     networks:
       - s2s-net
 
@@ -12,6 +24,10 @@ services:
     container_name: orderservice
     ports:
       - "8083:8083"
+    environment:
+      JWK_SET_URI: http://authserver:9000/oauth2/jwks
+    depends_on:
+      - authserver
     networks:
       - s2s-net
 
@@ -23,9 +39,12 @@ services:
     environment:
       MENU_URL: http://menuservice:8082
       ORDER_URL: http://orderservice:8083
+      JWK_SET_URI: http://authserver:9000/oauth2/jwks
+      TOKEN_URI: http://authserver:9000/oauth2/token
     depends_on:
       - menuservice
       - orderservice
+      - authserver
     networks:
       - s2s-net
 
@@ -36,8 +55,10 @@ services:
       - "8080:8080"
     environment:
       ORDERCREATION_URL: http://ordercreationservice:8081
+      TOKEN_URI: http://authserver:9000/oauth2/token
     depends_on:
       - ordercreationservice
+      - authserver
     networks:
       - s2s-net
 
