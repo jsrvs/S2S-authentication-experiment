@@ -18,9 +18,16 @@ public class OrderCreationController {
 
     public OrderCreationController(
             @Value("${downstream.menu.url}") String menuUrl,
-            @Value("${downstream.order.url}") String orderUrl) {
-        this.menuClient = RestClient.create(menuUrl);
-        this.orderClient = RestClient.create(orderUrl);
+            @Value("${downstream.order.url}") String orderUrl,
+            @Value("${s2s.api-key}") String apiKey) {
+        this.menuClient = RestClient.builder()
+                .baseUrl(menuUrl)
+                .defaultHeader("X-API-Key", apiKey)
+                .build();
+        this.orderClient = RestClient.builder()
+                .baseUrl(orderUrl)
+                .defaultHeader("X-API-Key", apiKey)
+                .build();
     }
 
     @PostMapping
