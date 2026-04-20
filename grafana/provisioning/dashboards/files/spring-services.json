@@ -91,11 +91,6 @@
           "expr": "sum(rate(k6_http_reqs_total[1m]))",
           "legendFormat": "k6 client (end-to-end)",
           "refId": "A"
-        },
-        {
-          "expr": "sum by (application) (rate(http_server_requests_seconds_count{job=\"spring-services\",application=\"gatewayservice\",uri!=\"/actuator/prometheus\"}[1m]))",
-          "legendFormat": "gateway server-side",
-          "refId": "B"
         }
       ]
     },
@@ -120,7 +115,7 @@
           "refId": "B"
         },
         {
-          "expr": "rate(k6_http_req_duration_seconds_sum[1m]) / rate(k6_http_req_duration_seconds_count[1m]) * 1000",
+          "expr": "histogram_avg(rate(k6_http_req_duration_seconds[1m])) * 1000",
           "legendFormat": "avg",
           "refId": "C"
         }
